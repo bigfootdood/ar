@@ -1,0 +1,58 @@
+<!doctype HTML>
+<html>
+<script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+<script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.7.8/aframe/build/aframe-ar.js"></script>
+
+<body style='margin : 0px; overflow: hidden;'>
+    <script>
+        AFRAME.registerComponent('cloaking-plane', {
+            schema: {
+                top: { type: "float", default: .5 },
+                bottom: { type: "float", default: .5 },
+                left: { type: "float", default: .5 },
+                right: { type: "float", default: .5 },
+            },
+            init: function () {
+                var data = this.data;
+                var top = data.top;
+                var bottom = data.bottom;
+                var left = data.left;
+                var right = data.right;
+                var geometry = new THREE.PlaneGeometry(50, 50);
+                var material = new THREE.MeshBasicMaterial({ colorWrite: false });
+
+                var planeN = new THREE.Mesh(geometry, material);
+                planeN.position.set(0, 0, -25 - top);
+                planeN.rotation.set("-1.5708", "0", "0");
+
+                var planeS = new THREE.Mesh(geometry, material);
+                planeS.position.set(0, 0, 25 + bottom);
+                planeS.rotation.set("-1.5708", "0", "0");
+
+                var planeE = new THREE.Mesh(geometry, material);
+                planeE.position.set(25 + left, 0, 0);
+                planeE.rotation.set("-1.5708", "0", "0");
+
+                var planeW = new THREE.Mesh(geometry, material);
+                planeW.position.set(-25 - right, 0, 0);
+                planeW.rotation.set("-1.5708", "0", "0");
+
+                this.el.object3D.add(planeN, planeS, planeE, planeW);
+
+            }
+        })
+    </script>
+    <a-scene embedded arjs>
+        <a-marker preset="hiro">
+            <a-entity cloaking-plane='top: 0.73; bottom: 1.67; left: 0.67; right: 0.67'></a-entity>
+            <a-plane position="0 -10 0" color="azure" rotation="-90 0 0" scale="50 50 50" width="4" height="4">
+            </a-plane>
+            <!-- <a-box position='0 - 0' material='color: blue;'></a-box> -->
+            <a-obj-model src="model.obj" position=".4 -4 .5" color="white" rotation="0 -90 0" scale=".08 .08 .08"
+                animation="property: rotation; to: 360 -90 0; loop: true; dur: 20000"></a-obj-model>
+        </a-marker>
+        <a-entity camera></a-entity>
+    </a-scene>
+</body>
+
+</html>
